@@ -2,10 +2,10 @@ import { useEffect, useState } from "react"
 
 export const Sender = () => {
     const [socket, setSocket] = useState<WebSocket | null>(null);
-    const [, setPC] = useState<RTCPeerConnection | null>(null);
+    const [pc, setPC] = useState<RTCPeerConnection | null>(null);
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:3001');
+        const socket = new WebSocket('ws://localhost:8080');
         setSocket(socket);
         socket.onopen = () => {
             socket.send(JSON.stringify({
@@ -42,6 +42,7 @@ export const Sender = () => {
         }
 
         pc.onnegotiationneeded = async () => {
+            console.error("onnegotiateion needed");
             const offer = await pc.createOffer();
             await pc.setLocalDescription(offer);
             socket?.send(JSON.stringify({
@@ -49,7 +50,7 @@ export const Sender = () => {
                 sdp: pc.localDescription
             }));
         }
-
+            
         getCameraStreamAndSend(pc);
     }
 
@@ -61,6 +62,9 @@ export const Sender = () => {
             // this is wrong, should propogate via a component
             document.body.appendChild(video);
             stream.getTracks().forEach((track) => {
+                console.error("track added");
+                console.log(track);
+                console.log(pc);
                 pc?.addTrack(track);
             });
         });

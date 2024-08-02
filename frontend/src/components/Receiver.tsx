@@ -1,9 +1,10 @@
 import { useEffect } from "react"
 
-export const Receiver = () => {
 
+export const Receiver = () => {
+    
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:3001');
+        const socket = new WebSocket('ws://localhost:8080');
         socket.onopen = () => {
             socket.send(JSON.stringify({
                 type: 'receiver'
@@ -18,6 +19,7 @@ export const Receiver = () => {
 
         const pc = new RTCPeerConnection();
         pc.ontrack = (event) => {
+            console.log(event);
             video.srcObject = new MediaStream([event.track]);
             video.play();
         }
@@ -41,6 +43,6 @@ export const Receiver = () => {
     }
 
     return <div>
-
+        
     </div>
 }
