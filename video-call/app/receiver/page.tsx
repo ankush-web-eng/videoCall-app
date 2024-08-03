@@ -1,10 +1,10 @@
+'use client'
 import { useEffect } from "react"
 
-
-export const Receiver = () => {
+export default function Receiver() {
 
     useEffect(() => {
-        const socket = new WebSocket(import.meta.env.VITE_WSS_URL);
+        const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_URL!);
         socket.onopen = () => {
             socket.send(JSON.stringify({
                 type: 'receiver'
@@ -73,7 +73,7 @@ export const Receiver = () => {
         }
     }
 
-    return <div>
+    return <div className="flex justify-center items-center space-x-3 min-h-screen">
         Receiver
     </div>
 }

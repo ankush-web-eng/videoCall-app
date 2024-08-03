@@ -1,10 +1,11 @@
+'use client'
 import { useEffect, useState } from "react"
 
-export const Sender = () => {
+export default function Sender() {
     const [socket, setSocket] = useState<WebSocket | null>(null);
 
     useEffect(() => {
-        const socket = new WebSocket(import.meta.env.VITE_WSS_URL);
+        const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_URL!);
         setSocket(socket);
         socket.onopen = () => {
             socket.send(JSON.stringify({
@@ -70,8 +71,7 @@ export const Sender = () => {
         });
     }
 
-    return <div>
-        Sender
-        <button onClick={initiateConn}> Send data </button>
+    return <div className="flex justify-center items-center space-x-3 min-h-screen">
+        <button className="rounded-xl border p-3 bg-sky-400 text-white" onClick={initiateConn}> Send data </button>
     </div>
 }

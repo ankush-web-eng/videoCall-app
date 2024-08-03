@@ -1,12 +1,12 @@
-# Project Title
+# Video-calling App
 
 ## Getting Started
 
 To run this project, first clone this repository and open your terminal. Then run the following commands:
 
-## Ensure you have a .env file in your frontend folder with the following content:
+### Ensure you have a .env file in your frontend folder with the following content:
 
-VITE_WSS_URL=ws://localhost:8080
+NEXT_PUBLIC_WSS_URL=ws://localhost:8080
 
 ### Backend Setup
 
@@ -21,7 +21,7 @@ cd backend && npm install
 Now, navigate to the frontend directory and install the necessary dependencies:
 
 ```bash
-cd ../frontend && npm install
+cd ../video-call && npm install
 ```
 
 ### Run the servers
