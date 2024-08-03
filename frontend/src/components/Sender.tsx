@@ -2,10 +2,9 @@ import { useEffect, useState } from "react"
 
 export const Sender = () => {
     const [socket, setSocket] = useState<WebSocket | null>(null);
-    const [pc, setPC] = useState<RTCPeerConnection | null>(null);
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8080');
+        const socket = new WebSocket(import.meta.env.VITE_WSS_URL);
         setSocket(socket);
         socket.onopen = () => {
             socket.send(JSON.stringify({
@@ -30,8 +29,9 @@ export const Sender = () => {
             }
         }
 
-        const pc = new RTCPeerConnection();
-        setPC(pc);
+        const pc = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+        });
         pc.onicecandidate = (event) => {
             if (event.candidate) {
                 socket?.send(JSON.stringify({
@@ -50,7 +50,7 @@ export const Sender = () => {
                 sdp: pc.localDescription
             }));
         }
-            
+
         getCameraStreamAndSend(pc);
     }
 
