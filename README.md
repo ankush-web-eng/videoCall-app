@@ -4,6 +4,10 @@
 
 To run this project, first clone this repository and open your terminal. Then run the following commands:
 
+## Ensure you have a .env file in your frontend folder with the following content:
+
+VITE_WSS_URL=ws://localhost:8080
+
 ### Backend Setup
 
 Navigate to the backend directory and install the necessary dependencies:
@@ -11,25 +15,27 @@ Navigate to the backend directory and install the necessary dependencies:
 ```bash
 cd backend && npm install
 ```
+
+### Frontend Setup
+
 Now, navigate to the frontend directory and install the necessary dependencies:
 
 ```bash
 cd ../frontend && npm install
 ```
 
-It's time to run the frontend server:
+### Run the servers
+
+Frontend server:
 
 ```bash
 npm run dev
 ```
-And the backend server as well:
+
+Backend server:
 
 ```bash
 cd ../backend && npm run dev
 ```
-
-##Ensure you have a .env file in your frontend repository with the following content:
-
-VITE_WSS_URL=ws://localhost:8080
 
 #Happy Coding
