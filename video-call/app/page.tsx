@@ -12,7 +12,9 @@ import { Button } from "@/components/ui/button";
 export default function Page() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [hidden, setHidden] = useState<boolean>(true);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
   const pcRef = useRef<RTCPeerConnection | null>(null);
 
@@ -29,17 +31,6 @@ export default function Page() {
       socket.close();
     };
   }, []);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      console.log("Video element is available");
-      if (videoRef.current.srcObject) {
-        console.log("Video has a source");
-      } else {
-        console.log("Video does not have a source");
-      }
-    }
-  }, [isOpen]);
 
   const initiateConn = async () => {
     if (!socket) {
@@ -66,6 +57,12 @@ export default function Page() {
       }
     };
 
+    pc.ontrack = (event) => {
+      if (remoteVideoRef.current) {
+        remoteVideoRef.current.srcObject = event.streams[0];
+      }
+    };
+
     pc.onnegotiationneeded = async () => {
       try {
         const offer = await pc.createOffer();
@@ -89,7 +86,7 @@ export default function Page() {
     };
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
@@ -98,6 +95,7 @@ export default function Page() {
         pc.addTrack(track, stream);
       });
       setIsOpen(true);
+      setHidden(false);
     } catch (error) {
       toast({
         title: 'Error',
@@ -122,12 +120,9 @@ export default function Page() {
   }, []);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button onClick={initiateConn}>Start Call</Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-[90vw] w-full sm:max-w-[600px]">
-        <div className="w-full aspect-video bg-black">
+    <div className="">
+      <Button onClick={initiateConn}>Start call</Button>
+      <div className={`w-full aspect-video bg-black ${hidden ? "hidden" : ""}`}>
           <video
             ref={videoRef}
             autoPlay
@@ -135,8 +130,13 @@ export default function Page() {
             playsInline
             className="w-full h-full object-contain"
           />
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="w-full h-full object-contain"
+          />
         </div>
-      </DialogContent>
-    </Dialog>
+    </div>
   );
 };
