@@ -1,15 +1,16 @@
 'use client'
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Receiver() {
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const localVideoRef = useRef<HTMLVideoElement>(null);
+  const [hidden, setHidden] = useState<boolean>(true);
 
   useEffect(() => {
     const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_URL!);
     socket.onopen = () => {
       socket.send(JSON.stringify({
-        type: 'receiver'
+        type: 'videoReceiver'
       }));
     };
     startReceiving(socket);
@@ -23,7 +24,7 @@ export default function Receiver() {
     pc.onicecandidate = (event) => {
       if (event.candidate) {
         socket.send(JSON.stringify({
-          type: 'iceCandidate',
+          type: 'videoIceCandidate',
           candidate: event.candidate
         }));
       }
@@ -37,15 +38,15 @@ export default function Receiver() {
 
     socket.onmessage = async (event) => {
       const message = JSON.parse(event.data);
-      if (message.type === 'createOffer') {
+      if (message.type === 'videoCreateOffer') {
         await pc.setRemoteDescription(message.sdp);
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         socket.send(JSON.stringify({
-          type: 'createAnswer',
+          type: 'videoCreateAnswer',
           sdp: answer
         }));
-      } else if (message.type === 'iceCandidate') {
+      } else if (message.type === 'videoIceCandidate') {
         await pc.addIceCandidate(message.candidate);
       }
     };
@@ -55,6 +56,7 @@ export default function Receiver() {
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = stream;
         localVideoRef.current.play();
+        setHidden(false)
       }
       stream.getTracks().forEach((track) => {
         pc.addTrack(track, stream);
@@ -65,20 +67,20 @@ export default function Receiver() {
   }
 
   return (
-    <div>
-      <video
-        ref={localVideoRef}
-        autoPlay
-        muted
-        playsInline
-        className="w-full h-full object-contain"
-      />
-      <video
-        ref={remoteVideoRef}
-        autoPlay
-        playsInline
-        className="w-full h-full object-contain"
-      />
-    </div>
+      <div className={`w-full aspect-video bg-black ${hidden ? "hidden" : ""}`}>
+          <video
+            ref={localVideoRef}
+            autoPlay
+            muted
+            playsInline
+            className="w-full h-full object-contain"
+          />
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="w-full h-full object-contain"
+          />
+        </div>
   );
 }

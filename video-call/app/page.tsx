@@ -23,7 +23,7 @@ export default function Page() {
     setSocket(socket);
     socket.onopen = () => {
       socket.send(JSON.stringify({
-        type: 'sender'
+        type: 'videoSender'
       }));
     };
 
@@ -51,7 +51,7 @@ export default function Page() {
     pc.onicecandidate = (event) => {
       if (event.candidate) {
         socket.send(JSON.stringify({
-          type: 'iceCandidate',
+          type: 'videoIceCandidate',
           candidate: event.candidate
         }));
       }
@@ -68,7 +68,7 @@ export default function Page() {
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
         socket.send(JSON.stringify({
-          type: 'createOffer',
+          type: 'videoCreateOffer',
           sdp: pc.localDescription
         }));
       } catch (error) {
@@ -78,9 +78,9 @@ export default function Page() {
 
     socket.onmessage = async (event) => {
       const message = JSON.parse(event.data);
-      if (message.type === 'createAnswer') {
+      if (message.type === 'videoCreateAnswer') {
         await pc.setRemoteDescription(message.sdp);
-      } else if (message.type === 'iceCandidate') {
+      } else if (message.type === 'videoIceCandidate') {
         await pc.addIceCandidate(message.candidate);
       }
     };
