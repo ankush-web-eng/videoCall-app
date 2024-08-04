@@ -6,7 +6,7 @@ import {
     DialogContent,
 } from "@/components/ui/dialog"
 
-export default function Receiver({ username }: { username: string }) {
+export default function Receiver() {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const videoRef = useRef<HTMLVideoElement>(null);
