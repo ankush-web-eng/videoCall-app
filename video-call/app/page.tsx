@@ -120,23 +120,28 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="">
+    <div className="flex flex-col items-center">
       <Button onClick={initiateConn}>Start call</Button>
-      <div className={`w-full aspect-video bg-black ${hidden ? "hidden" : ""}`}>
+      <dialog
+        open={!hidden}
+        className="w-full h-full max-w-full max-h-full p-0 bg-black flex flex-col justify-center items-center"
+      >
+        <div className="w-full h-full max-w-screen-lg max-h-screen flex flex-col justify-center items-center gap-4 p-4">
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="w-full max-h-[60vh] object-contain bg-gray-800"
+          />
           <video
             ref={videoRef}
             autoPlay
             muted
             playsInline
-            className="w-full h-full object-contain"
-          />
-          <video
-            ref={remoteVideoRef}
-            autoPlay
-            playsInline
-            className="w-full h-full object-contain"
+            className="w-full max-h-[30vh] object-contain bg-gray-800"
           />
         </div>
+      </dialog>
     </div>
   );
 };
