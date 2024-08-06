@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Page() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -120,26 +121,33 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center">
-      <Button onClick={initiateConn}>Start call</Button>
+    <div className="flex min-h-screen justify-center items-center">
+      <div className="flex flex-col space-y-3">
+        <Button onClick={initiateConn}>Start call</Button>
+        <div className="flex flex-col">
+          <span className="text-gray-500">Ask your friend to open <Link href="https://video.ankushsingh.tech/receiver" className="text-sky-500">/receiver</Link> path.</span>
+          <span className="text-gray-500">And wait for 30 seconds.</span>
+        </div>
+      </div>
       <dialog
         open={!hidden}
-        className="w-full h-full max-w-full max-h-full p-0 bg-black flex flex-col justify-center items-center"
       >
-        <div className="w-full h-full max-w-screen-lg max-h-screen flex flex-col justify-center items-center gap-4 p-4">
-          <video
-            ref={remoteVideoRef}
-            autoPlay
-            playsInline
-            className="w-full max-h-[60vh] object-contain bg-gray-800"
-          />
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
-            className="w-full max-h-[30vh] object-contain bg-gray-800"
-          />
+        <div className="w-full h-full max-w-full max-h-full p-0 bg-gray-100 flex flex-col justify-center items-center">
+          <div className="w-full h-full max-w-screen-lg max-h-screen flex flex-col justify-center items-center gap-4 p-4">
+            <video
+              ref={remoteVideoRef}
+              autoPlay
+              playsInline
+              className="w-full max-h-[60vh] object-contain bg-white"
+            />
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              playsInline
+              className="w-full max-h-[30vh] object-contain bg-white"
+            />
+          </div>
         </div>
       </dialog>
     </div>

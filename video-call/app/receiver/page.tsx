@@ -69,21 +69,21 @@ export default function Receiver() {
   return (
     <dialog
       open={!hidden}
-      className="w-full h-full max-w-full max-h-full p-0 bg-black flex flex-col justify-center items-center"
+      className="w-full h-full max-w-full max-h-full p-0 bg-gray-100 flex flex-col justify-center items-center"
     >
       <div className="w-full h-full max-w-screen-lg max-h-screen flex flex-col justify-center items-center gap-4 p-4">
         <video
           ref={remoteVideoRef}
           autoPlay
           playsInline
-          className="w-full max-h-[60vh] object-contain bg-gray-800"
+          className="w-full max-h-[60vh] object-contain bg-white"
         />
         <video
           ref={localVideoRef}
           autoPlay
           muted
           playsInline
-          className="w-full max-h-[30vh] object-contain bg-gray-800"
+          className="w-full max-h-[30vh] object-contain bg-white"
         />
       </div>
     </dialog>
